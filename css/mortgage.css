@@ -1,0 +1,37 @@
+﻿body {
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th {
+    font-style: italic;
+}
+
+td {
+    padding: 2px 15px 2px 15px;
+}
+
+.bestvalue {
+    font-weight: bold;
+}
+
+.selected {
+    background-color:#ffffaa;
+}
+
+.editpanel {
+    float:left;
+}
+
+.help {
+    border: 1px solid black;
+    border-radius: 50%;
+    position: relative;
+    display: inline;
+    padding: 0px 4px 0px 4px;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #ffffaa;
+}

@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/mortgage.css" />
+    </head>
+    <body>
+        <dl class="editpanel">
+            <dt title="We assume you invest all cash in an account with this level of average return.">Investment rate</dt>
+            <dd><input data-bind="value: CurrentScenario().FormattedInvestmentRate" placeholder="8%"/></dd>
+            <dt title="Your house value is assumed to grow at the same rate as inflation.">Inflation rate</dt>
+            <dd><input data-bind="value: CurrentScenario().FormattedInflationRate" placeholder="2%"/></dd>
+            <dt title="This is the average tax rate you would be paying on your mortgage interest if you didn't deduct it.">Tax rate</dt>
+            <dd><input data-bind="value: CurrentScenario().FormattedTaxRate" placeholder="25%"/></dd>
+            <dt title="This helps determine the loan to value ratio for insurance">House value</dt>
+            <dd><input data-bind="value: CurrentMortgage().FormattedHouseValue" placeholder="360,000.00"/></dd>
+        </dl>
+        
+        <dl class="editpanel">
+            <dt title="The advertised rate of the mortgage - not the APR">Rate</dt>
+            <dd><input data-bind="value: CurrentMortgage().FormattedRate" placeholder="4.5%"/></dd>
+            <dt title="Including any fees that are financed into the loan">Loan amount</dt>
+            <dd><input data-bind="value: CurrentMortgage().FormattedAmount" placeholder="$300,000.00"/></dd>
+            <dt title="Typically 15 or 30">Term in years</dt>
+            <dd><input data-bind="value: CurrentMortgage().TermInYears" placeholder="30"/></dd>
+            <dt title="Anything you pay up front aside from the down payment">Up front fees</dt>
+            <dd><input data-bind="value: CurrentMortgage().FormattedUpFrontFees" placeholder="$5,000.00"/></dd>
+        </dl>
+        
+        <button data-bind="click: AddMortgage">Copy Mortgage</button>
+        <button data-bind="click: DeleteMortgage, enable: Mortgages().length > 1">Delete Mortgage</button>
+
+        <table>
+            <colgroup></colgroup>
+            <!-- ko foreach: Mortgages -->
+            <colgroup data-bind="css: { selected: _.isEqual($data, $root.CurrentMortgage()) }"></colgroup>
+            <!-- /ko -->
+            <tbody>
+                <tr>
+                    <th>Year</th>
+                    <!-- ko foreach: Mortgages -->
+                    <th data-bind="text: TermInYears() + ' year / ' + FormattedRate(), click: $root.SelectMortgage"></th>
+                    <!-- /ko -->
+                </tr>
+
+                <!-- ko foreach: Years  -->
+                <tr>
+                    <td data-bind="text: $data.Year"></td>
+                    <!-- ko foreach: $root.Mortgages  -->
+                    <td data-bind="click: $root.SelectMortgage, css: { bestvalue: $parent.IsBestValue[$index()] }, attr: {title: 'House Value: ' + $root.HouseValue($data, $parent.Year) + ', Cash (with interest and minus payments): ' + $root.Cash($data, $parent.Year) + ', Principal Owed: ' + $root.Principal($data, $parent.Year)}, text: accounting.formatMoney($root.NominalValue($data, $parent.Year, $index()))"></td>
+                    <!-- /ko -->
+                </tr>
+                <!-- /ko -->
+            </tbody>
+        </table>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+        <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
+        <script type="text/javascript" src="js/accounting/accounting.min.js"></script>
+        <script type="text/javascript" src="js/knockout-extensions.js"></script>    
+        <script type="text/javascript" src="js/mortgages/mortgageCalculator.js"></script>
+        <script type="text/javascript" src="js/mortgages/Scenario.js"></script>
+        <script type="text/javascript" src="js/mortgages/Mortgage.js"></script>
+        <script type="text/javascript" src="js/mortgages/MortgageScenarioViewModel.js"></script>
+        <script>
+            ko.applyBindings(new MortgageScenarioViewModel());
+        </script>
+    </body>
+</html>
